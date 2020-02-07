@@ -1,0 +1,6 @@
+C:\Users\senaszel\Source\Repos\USAquiz\bin\Debug\USAquiz.exe.config
+C:\Users\senaszel\Source\Repos\USAquiz\bin\Debug\USAquiz.exe
+C:\Users\senaszel\Source\Repos\USAquiz\bin\Debug\USAquiz.pdb
+C:\Users\senaszel\Source\Repos\USAquiz\obj\Debug\USAquiz.csprojAssemblyReference.cache
+C:\Users\senaszel\Source\Repos\USAquiz\obj\Debug\USAquiz.exe
+C:\Users\senaszel\Source\Repos\USAquiz\obj\Debug\USAquiz.pdb

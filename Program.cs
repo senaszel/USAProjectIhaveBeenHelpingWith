@@ -8,14 +8,11 @@ namespace USAquiz
 {
     class Program
     {
-
         static void Main(string[] args)
         {
             //Quiz introduction
-            string b = "Engineering 115: Introduction to Computing for Engineers";
-            Console.WriteLine(b);
-            string c = "Course Project: Checkpoint 3 Quiz Programming Project";
-            Console.WriteLine(c);
+            string title = "Engineering 115: Introduction to Computing for Engineers";
+            Console.WriteLine(title);
             Console.WriteLine("Fluorescent Penetrant Level II Quiz");
             Console.WriteLine("Press any key to begin the quiz.");
             Console.ReadKey();
@@ -255,18 +252,145 @@ namespace USAquiz
         private static void AskQuestion(string question, string answerA, string answerB, string answerC, string answerD, char correct, ref bool AnsweredCorrectly)
         {
             Console.Clear();
+            List<string> list = new List<string>() { answerA, answerB, answerC, answerD };
+            ShowQuestion(question, list, 0);
+            EnableInteraction(question, list, out ConsoleKey choice);
+            CheckAnswer(question, choice, correct, ref AnsweredCorrectly, answerA, answerB, answerC, answerD);
+        }
 
+        private static void ShowQuestion(string question, List<string> listOfPossibleAnswers, int pointerPlace)
+        {
+            string temp = string.Empty;
+            listOfPossibleAnswers[pointerPlace] += "  <<<";
+            Console.Clear();
             Console.WriteLine(question);
             Console.WriteLine();
-            Console.WriteLine(string.Concat("A\t", answerA));
-            Console.WriteLine(string.Concat("B\t", answerB));
-            if (answerC != " ")
-                Console.WriteLine(string.Concat("C\t", answerC));
-            if (answerD != " ")
-                Console.WriteLine(string.Concat("D\t", answerD));
+            if (listOfPossibleAnswers[0].EndsWith("  <<<"))
+            {
+                temp = listOfPossibleAnswers[0];
+                listOfPossibleAnswers[0] = listOfPossibleAnswers[0].Substring(0, listOfPossibleAnswers[0].Length - 5);
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.WriteLine(string.Concat("A\t", listOfPossibleAnswers[0]));
+                listOfPossibleAnswers[0] = temp;
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.WriteLine(string.Concat("A\t", listOfPossibleAnswers[0]));
+            }
+            if (listOfPossibleAnswers[1].EndsWith("  <<<"))
+            {
+                temp = listOfPossibleAnswers[1];
+                listOfPossibleAnswers[1] = listOfPossibleAnswers[1].Substring(0, listOfPossibleAnswers[1].Length - 5);
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.WriteLine(string.Concat("B\t", listOfPossibleAnswers[1]));
+                listOfPossibleAnswers[1] = temp;
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.WriteLine(string.Concat("B\t", listOfPossibleAnswers[1]));
+            }
 
+            if (listOfPossibleAnswers[2] != " ")
+            {
+                if (listOfPossibleAnswers[2].EndsWith("  <<<"))
+                {
+                    temp = listOfPossibleAnswers[2];
+                    listOfPossibleAnswers[2] = listOfPossibleAnswers[2].Substring(0, listOfPossibleAnswers[2].Length - 5);
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.WriteLine(string.Concat("C\t", listOfPossibleAnswers[2]));
+                    listOfPossibleAnswers[2] = temp;
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.WriteLine(string.Concat("C\t", listOfPossibleAnswers[2]));
+                }
+            }
+            if (listOfPossibleAnswers[3] != " ")
+            {
+                if (listOfPossibleAnswers[3].EndsWith("  <<<"))
+                {
+                    temp = listOfPossibleAnswers[3];
+                    listOfPossibleAnswers[3] = listOfPossibleAnswers[3].Substring(0, listOfPossibleAnswers[3].Length - 5);
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.WriteLine(string.Concat("D\t", listOfPossibleAnswers[3]));
+                    listOfPossibleAnswers[3] = temp;
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.WriteLine(string.Concat("D\t", listOfPossibleAnswers[3]));
+                }
+            }
+        }
 
-            ConsoleKey choice = Console.ReadKey(true).Key;
+        private static void EnableInteraction(string question, List<string> listOfPossibleAnswers, out ConsoleKey choice, int pointerPlace = 0)
+        {
+            do
+            {
+                for (int i = 0; i < listOfPossibleAnswers.Count; i++)
+                {
+                    if (listOfPossibleAnswers[i].EndsWith("<<<"))
+                    {
+                        listOfPossibleAnswers[i] = listOfPossibleAnswers[i].Substring(0, listOfPossibleAnswers[i].Count() - 5);
+                    }
+                }
+
+                choice = Console.ReadKey(true).Key;
+                switch (choice)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (pointerPlace - 1 > -1)
+                        {
+                            pointerPlace--;
+                        }
+                        else
+                        {
+                            pointerPlace = 0;
+                        }
+                        ShowQuestion(question, listOfPossibleAnswers, pointerPlace);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (pointerPlace + 1 < listOfPossibleAnswers.Count())
+                        {
+                            pointerPlace++;
+                        }
+                        else
+                        {
+                            pointerPlace = listOfPossibleAnswers.Count - 1;
+                        }
+                        ShowQuestion(question, listOfPossibleAnswers, pointerPlace);
+                        break;
+                    case ConsoleKey.Enter:
+                        switch (pointerPlace)
+                        {
+                            case 0:
+                                choice = ConsoleKey.A;
+                                break;
+                            case 1:
+                                choice = ConsoleKey.B;
+                                break;
+                            case 2:
+                                choice = ConsoleKey.C;
+                                break;
+                            case 3:
+                                choice = ConsoleKey.D;
+                                break;
+                        }
+                        break;
+                }
+
+            } while (
+                    choice == ConsoleKey.Enter ||
+                    choice == ConsoleKey.UpArrow ||
+                    choice == ConsoleKey.DownArrow
+                    );
+        }
+
+        private static void CheckAnswer(string question, ConsoleKey choice, char correct, ref bool answeredCorrectly, string answerA, string answerB, string answerC, string answerD)
+        {
             if (answerC != " " && answerD != " ")
             {
                 if (choice == ConsoleKey.A ||
@@ -274,11 +398,11 @@ namespace USAquiz
                     choice == ConsoleKey.C ||
                     choice == ConsoleKey.D)
                 {
-                    AllowedInput(choice, correct, ref AnsweredCorrectly);
+                    AllowedInput(choice, correct, ref answeredCorrectly);
                 }
                 else
                 {
-                    WrongInput(question, answerA, answerB, answerC, answerD, correct, ref AnsweredCorrectly);
+                    WrongInput(question, answerA, answerB, answerC, answerD, correct, ref answeredCorrectly);
                 }
             }
             else
@@ -286,11 +410,11 @@ namespace USAquiz
                 if (choice == ConsoleKey.A ||
                     choice == ConsoleKey.B)
                 {
-                    AllowedInput(choice, correct, ref AnsweredCorrectly);
+                    AllowedInput(choice, correct, ref answeredCorrectly);
                 }
                 else
                 {
-                    WrongInput(question, answerA, answerB, answerC, answerD, correct, ref AnsweredCorrectly);
+                    WrongInput(question, answerA, answerB, answerC, answerD, correct, ref answeredCorrectly);
                 }
             }
         }
